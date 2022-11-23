@@ -1,42 +1,42 @@
 const verifyToken = require("../controllers/middleware");
 const router = require("express").Router();
 const Quote = require("../models/Quote");
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-
+const fs = require("fs");
 //perform crud operation here
 
 //create
 router.post("/", verifyToken, async (req, res) => {
   try {
     // jwt.verify(req.token, "secretkey", async (err, authData) => {
-      const {email} = req.user.user;
-      console.log(req.user);
 
-      console.log(email);
-      // if (err) {
-      //   res.status(403).json("Forbidden");
-      // } else {
-        // authData contains user info
-        const newQuote = new Quote({
-          email:email,
-          name: req.body.name,
-          quote: req.body.quote,
-        });
+    const { email } = req.user.user;
 
-        const quote = await newQuote.save();
-        res.status(200).json({quote,email,msg:"JWT working"});
-      }
+    // console.log(req.user);
+    // console.log(req.user);
+
+    console.log(email);
+    // if (err) {
+    //   res.status(403).json("Forbidden");
+    // } else {
+    // authData contains user info
+    const newQuote = new Quote({
+      email: email,
+      name: req.body.name,
+      quote: req.body.quote,
+    });
+
+    const quote = await newQuote.save();
+    res.status(200).json({ quote, email, msg: "JWT working" });
+  } catch (err) {
     // });
-  // }
-   catch (err) {
+    // }
     res.status(500).json(err);
   }
 });
 
 //update
 
-router.put("/:id",verifyToken,async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
       const updatedQuote = await Quote.findByIdAndUpdate(
@@ -57,14 +57,14 @@ router.put("/:id",verifyToken,async (req, res) => {
 });
 
 //Delete
-router.delete("/:id",verifyToken,async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   if (req.body.userId === req.params.id) {
     try {
       const quote = await Quote.findById(req.params.id);
       console.log(quote.email);
       if (quote) {
         const deletedQuote = await Quote.findByIdAndDelete(req.params.id);
-        res.status(200).json('Quote has been deleted:',deletedQuote);
+        res.status(200).json("Quote has been deleted:", deletedQuote);
       } else {
         res.status(404).json("User not found");
       }
@@ -78,9 +78,14 @@ router.delete("/:id",verifyToken,async (req, res) => {
 
 //GET
 
-router.get("/",verifyToken,async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const quote = await Quote.find();
+    const quote = await Quote.findById(req.params.id);
+    console.log(quote.name);
+    fs.writeFile(`../outputfile/${quote.name}quote.txt`, quote, (err) => {
+      if (err) throw err;
+      console.log("file saved");
+    });
     res.status(200).json(quote);
   } catch (err) {
     res.status(500).json(err);
