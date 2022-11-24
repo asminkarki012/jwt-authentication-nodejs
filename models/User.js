@@ -10,7 +10,20 @@ const UserSchema = new mongoose.Schema(
         password:{
             type:String,
             required:true,
-         }
+        },
+        status:{
+            type:String,
+            enum:['Pending','Active'],
+            default:'Pending'
+        },
+        otp:{
+            type:String,
+            
+        },
+            expiresAt:{
+                type:Number,
+                default:Date.now()
+            }
     },{timestamps:true}
 
 

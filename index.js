@@ -22,19 +22,23 @@ async function main() {
   mongoose.connect(connectionString);
   console.log("MongoDB connected");
 }
-
 app.use("/api/auth",authRoute);
 app.use("/api/quote",postquoteRoute);
-// app.use('/static',express.static(path.join(__dirname,'public')));
+//to serve javascript html files
 app.use(express.static('public'));
-// app.set('view engine','ejs');
+// app.use(express.static(path.join(__dirname, "public")));
+
+//load view engine
+// app.set('views',path.join(__dirname,'views'));
+// app.set('view engine','pug');
 
 
-// app.get('/', (req,res) => {
 
-//   res.render('index.ejs',{});
+app.get('/api/auth/changepassword', (req,res) => {
+  res.sendFile(path.resolve(__dirname,'./public/changepassword.html'));
+  // res.render('index.pug');
 
-// })
+})
 
 const PORT = 4000;
 app.listen(PORT,() => {
