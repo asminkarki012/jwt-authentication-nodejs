@@ -33,11 +33,11 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.status(400).json("wrong credential!");
+      return res.status(400).json("wrong credential!");
     }
     const validated = await bcrypt.compare(req.body.password, user.password);
     if (!validated) {
-      res.status(400).json("wrong credential!");
+      return res.status(400).json("wrong credential!");
     }
     // console.log(user);
     const { password, ...other } = user._doc;
