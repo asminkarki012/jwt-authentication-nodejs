@@ -5,6 +5,6 @@
 - ~use refresh JWT token~
 - ~add password changing options~ 
 - ~Use this api in vanilla js to perform different operation.~ 
-~ - Email verification OTP~
+- ~Email verification OTP~
 
 
